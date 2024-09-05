@@ -328,6 +328,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let luaFilesDownloaded = 0;  // Lua files downloaded
     let totalLuaFiles = 0;  // Total Lua files to download
     let workshopComplete = false;  // Track whether workshop downloads are completed
+    let luaDownloadStarted = false;  // Track whether Lua downloads have started
     let gmodHooksCalled = false;  // To track if GMod hooks are used
     let lastMessageChangePercent = 0;  // Track the last percentage when the message was updated
     let currentMessage = "Initializing...";  // Track current message
@@ -371,12 +372,12 @@ document.addEventListener('DOMContentLoaded', function () {
     // Function to update progress bar
     function updateProgressBar() {
       let progressPercentage = 0;
-      
-      if (workshopComplete) {
-        // We're in the Lua file download stage, so use Lua progress
+  
+      if (luaDownloadStarted) {
+        // Lua file progress
         progressPercentage = calculateLuaProgress();
       } else {
-        // Still downloading workshop/general files, use general progress
+        // Workshop/general file progress
         progressPercentage = calculateGeneralProgress();
       }
   
@@ -393,10 +394,10 @@ document.addEventListener('DOMContentLoaded', function () {
       progressBar.style.width = progressPercentage + "%";
   
       if (progressPercentage === 100) {
-        progressText.innerHTML = workshopComplete ? "Lua files loaded. Skynet Online." : "Workshop Complete.";
-        fileProgress.innerHTML = workshopComplete ? "All Lua files loaded." : "Waiting for Lua files...";
+        progressText.innerHTML = luaDownloadStarted ? "Lua files loaded. Skynet Online." : "Workshop Complete.";
+        fileProgress.innerHTML = luaDownloadStarted ? "All Lua files loaded." : "Waiting for Lua files...";
       } else {
-        fileProgress.innerHTML = workshopComplete
+        fileProgress.innerHTML = luaDownloadStarted
           ? `${luaFilesDownloaded} Lua files downloaded out of ${totalLuaFiles}...`
           : `${filesNeeded} general files remaining...`;
       }
@@ -426,7 +427,18 @@ document.addEventListener('DOMContentLoaded', function () {
         totalFiles = 0;  // Reset total files for workshop stage
         filesNeeded = 0;  // Reset files needed for workshop stage
         console.log("Workshop downloads completed. Moving to Lua downloads.");
-        updateProgressBar();  // Force progress bar update
+      }
+  
+      // Check if the status indicates Lua downloads starting (e.g., "Requesting X Lua files")
+      const luaStartMatch = status.match(/Requesting (\d+) Lua files/);
+      if (luaStartMatch) {
+        // Transition to Lua downloads
+        luaDownloadStarted = true;  // Mark that Lua downloads have started
+        totalLuaFiles = parseInt(luaStartMatch[1], 10);  // Extract the total Lua files
+        luaFilesDownloaded = 0;  // Reset Lua files downloaded
+        progressBar.style.width = "0%";  // Reset the progress bar
+        console.log(`Lua downloads started. Total Lua files: ${totalLuaFiles}`);
+        updateProgressBar();  // Update the progress bar after reset
       }
   
       // Check if the status contains Lua download info (e.g., "Downloaded X of Y Lua files")
@@ -470,7 +482,7 @@ document.addEventListener('DOMContentLoaded', function () {
   });
   
   
-  
+  /* MUSIC AUTOPLAY-REMOVE FOR PROD */
   document.addEventListener('DOMContentLoaded', function () {
     const music = document.getElementById('background-music');
     const musicStatusBox = document.getElementById('music-status-box');
