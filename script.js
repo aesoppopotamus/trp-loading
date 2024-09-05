@@ -323,8 +323,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const progressText = document.getElementById('progress-text');
     const fileProgress = document.getElementById('file-progress');
     
-    let totalFiles = 0;  // Total files to download
-    let filesNeeded = 0;  // Files remaining to download
+    let totalFiles = 0;  // Total files to download (general)
+    let filesNeeded = 0;  // Files remaining to download (general)
+    let luaFilesDownloaded = 0;  // Lua files downloaded
+    let totalLuaFiles = 0;  // Total Lua files to download
     let gmodHooksCalled = false; // To track if GMod hooks are used
     let lastMessageChangePercent = 0;  // Track the last percentage when the message was updated
     let currentMessage = "Initializing...";  // Track current message
@@ -348,30 +350,48 @@ document.addEventListener('DOMContentLoaded', function () {
       return randomMessages[randomIndex];
     }
   
-    // Function to calculate progress and update progress bar
-    function updateProgressBar() {
+    // Function to calculate overall progress based on general files and Lua files
+    function calculateOverallProgress() {
+      let generalProgress = 0;
+      let luaProgress = 0;
+      
+      // General file progress
       if (totalFiles > 0 && filesNeeded <= totalFiles) {
         const filesDownloaded = totalFiles - filesNeeded;
-        const progressPercentage = Math.floor((filesDownloaded / totalFiles) * 100);
-        
-        // Only change the random message if we have crossed a 7% increment
-        if (progressPercentage - lastMessageChangePercent >= 7) {
-          lastMessageChangePercent = progressPercentage; // Update the last percentage
-          currentMessage = getRandomMessage();  // Get a new random message
-        }
+        generalProgress = (filesDownloaded / totalFiles) * 100;
+      }
+      
+      // Lua file progress
+      if (totalLuaFiles > 0 && luaFilesDownloaded <= totalLuaFiles) {
+        luaProgress = (luaFilesDownloaded / totalLuaFiles) * 100;
+      }
   
-        // Update the progress text with the current message and the updated percentage
-        progressText.innerHTML = `${currentMessage} ${progressPercentage}%`;
+      // Combine the two (50% weight to general files and 50% to Lua files)
+      const overallProgress = (generalProgress + luaProgress) / 2;
+      return Math.floor(overallProgress);
+    }
   
-        // Update progress bar width
-        progressBar.style.width = progressPercentage + "%";
+    // Function to update the progress bar
+    function updateProgressBar() {
+      const progressPercentage = calculateOverallProgress();
+      
+      // Only change the random message if we have crossed a 7% increment
+      if (progressPercentage - lastMessageChangePercent >= 7) {
+        lastMessageChangePercent = progressPercentage; // Update the last percentage
+        currentMessage = getRandomMessage();  // Get a new random message
+      }
   
-        if (progressPercentage === 100) {
-          progressText.innerHTML = "Skynet Systems Online. Prepare for Mission.";
-          fileProgress.innerHTML = "All files loaded.";
-        } else {
-          fileProgress.innerHTML = `${filesNeeded} files remaining...`;
-        }
+      // Update the progress text with the current message and the updated percentage
+      progressText.innerHTML = `${currentMessage} ${progressPercentage}%`;
+  
+      // Update progress bar width
+      progressBar.style.width = progressPercentage + "%";
+  
+      if (progressPercentage === 100) {
+        progressText.innerHTML = "Skynet Systems Online. Prepare for Mission.";
+        fileProgress.innerHTML = "All files loaded.";
+      } else {
+        fileProgress.innerHTML = `${filesNeeded} general files and ${luaFilesDownloaded} Lua files downloaded...`;
       }
     }
   
@@ -387,12 +407,19 @@ document.addEventListener('DOMContentLoaded', function () {
       console.log(`SetFilesNeeded called: Files needed: ${needed}`);  // Debug log
       filesNeeded = needed;
       updateProgressBar(); // Update the progress based on remaining files
-      gmodHooksCalled = true; // Mark that GMod hook is being used
     };
   
     // GMod Hook: Called when the client's joining status changes
     window.SetStatusChanged = function (status) {
       console.log(`SetStatusChanged called: Status changed to: ${status}`); // Debug log
+      
+      // Check if the status contains Lua download info (e.g., "Downloaded X of Y Lua files")
+      const luaMatch = status.match(/Downloaded (\d+) of (\d+) Lua files/);
+      if (luaMatch) {
+        luaFilesDownloaded = parseInt(luaMatch[1], 10);  // Extract the number of Lua files downloaded
+        totalLuaFiles = parseInt(luaMatch[2], 10);  // Extract the total Lua files
+        updateProgressBar();  // Update the progress based on Lua file downloads
+      }
     };
   
     // GMod Hook: Called when the client starts downloading a file
@@ -425,8 +452,6 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }, 5000);  // Wait 5000ms to see if GMod calls the hooks
   });
-  
-  
   
   
   document.addEventListener('DOMContentLoaded', function () {
