@@ -1,25 +1,13 @@
 // Simulate the player's name
-const playerName = "Human Resistance Fighter";  // Simulated player name
-document.getElementById('playerName').innerText = `Initiating User Interface for: ${playerName}`;
+const playerName = "Survivor";  // Simulated player name
+document.getElementById('playerName').innerText = `Welcome to the Future War, ${playerName}`;
 
 // Skynet server status
 setTimeout(() => {
   document.getElementById('serverStatus').innerText = "Skynet systems are online. Preparing battlefield resources...";
 }, 2000);
 
-// Progress bar animation
-let progressBar = document.querySelector('.progress');
-let progress = 0;
-let interval = setInterval(() => {
-  progress += 10;
-  progressBar.style.width = `${progress}%`;
-
-  if (progress >= 100) {
-    clearInterval(interval);
-    document.getElementById('serverStatus').innerText = "All systems loaded. The future begins now.";
-  }
-}, 500);
-
+// Scrolling data text overlays
 document.addEventListener('DOMContentLoaded', function () {
     const predefinedBlocks = [
         {
@@ -316,22 +304,98 @@ document.addEventListener('DOMContentLoaded', function () {
     addRightAssemblyLine();
   });
 
+  /* Progress Bar Hooks and Anim */
+
   document.addEventListener('DOMContentLoaded', function () {
     const progressBar = document.getElementById('progress-bar');
     const progressText = document.getElementById('progress-text');
-    let width = 0;
-    
-    function updateProgress() {
-      if (width < 100) {
-        width++;
-        progressBar.style.width = width + "%"; // Update the progress bar width
-        progressText.innerHTML = `Skynet Systems Initializing... ${width}%`; // Update the text
-      } else {
-        progressText.innerHTML = "Skynet Systems Online. Prepare for Mission.";
+    const fileProgress = document.getElementById('file-progress');
+    let totalFiles = 100;  // Default for local testing
+    let filesNeeded = totalFiles;  // All files needed initially
+    let gmodHooksCalled = false; // To track if GMod hooks are used
+  
+    // Update the progress bar based on files left to download
+    function updateProgressBar() {
+      console.log(`Total files: ${totalFiles}, Files needed: ${filesNeeded}`); // Log progress
+      if (totalFiles > 0) {
+        const filesDownloaded = totalFiles - filesNeeded;
+        const progressPercentage = Math.floor((filesDownloaded / totalFiles) * 100);
+        progressBar.style.width = progressPercentage + "%"; // Update progress bar width
+        progressText.innerHTML = `Initializing... ${progressPercentage}%`;
+  
+        if (progressPercentage === 100) {
+          progressText.innerHTML = "Skynet Systems Online. Prepare for Mission.";
+          fileProgress.innerHTML = "All files loaded.";
+        } else {
+          fileProgress.innerHTML = `${filesNeeded} files remaining.`;
+        }
       }
     }
   
-    // Update progress every 100ms (for a 10 second load)
-    setInterval(updateProgress, 100);
+    // GMod Hook: Total files to download (GMod will call this)
+    window.SetFilesTotal = function (total) {
+      console.log('SetFilesTotal called:', total);  // Debug log
+      totalFiles = total;
+      gmodHooksCalled = true; // Mark that GMod hook is being used
+    };
+  
+    // GMod Hook: Files remaining to download (GMod will call this)
+    window.SetFilesNeeded = function (needed) {
+      console.log('SetFilesNeeded called:', needed);  // Debug log
+      filesNeeded = needed;
+      updateProgressBar();
+      gmodHooksCalled = true; // Mark that GMod hook is being used
+    };
+  
+    // Fallback: Simulate loading progress for local testing
+    function simulateLocalProgress() {
+      console.log('Simulating local progress...'); // Log the fallback simulation
+      const localInterval = setInterval(function () {
+        if (filesNeeded > 0) {
+          filesNeeded--;
+          updateProgressBar();
+        } else {
+          clearInterval(localInterval);
+        }
+      }, 100);  // Simulate progress every 100ms
+    }
+  
+    // Check if GMod hooks are called, otherwise start local simulation
+    setTimeout(function () {
+      if (!gmodHooksCalled) {
+        console.log('GMod hooks not called. Simulating progress for local testing.');
+        simulateLocalProgress();  // Start local simulation after timeout
+      } else {
+        console.log('GMod hooks detected. Actual progress will be used.');
+      }
+    }, 500);  // Wait 500ms to see if GMod calls the hooks
   });
   
+  document.addEventListener('DOMContentLoaded', function () {
+    const music = document.getElementById('background-music');
+    const musicStatusBox = document.getElementById('music-status-box');
+    let isPlaying = false; // Track whether music is playing
+  
+    // Set initial volume
+    music.volume = 0.5;
+  
+    // Toggle music play/pause on click
+    document.addEventListener('click', function () {
+      if (!isPlaying) {
+        // Play music
+        music.play()
+          .then(() => {
+            isPlaying = true;
+            musicStatusBox.textContent = 'CLICK ANYWHERE TO STOP MUSIC'; // Update text
+          })
+          .catch(error => {
+            console.error('Error playing audio:', error);
+          });
+      } else {
+        // Pause music
+        music.pause();
+        isPlaying = false;
+        musicStatusBox.textContent = 'CLICK ANYWHERE TO START MUSIC'; // Update text
+      }
+    });
+  });
