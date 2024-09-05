@@ -305,14 +305,36 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   /* Progress Bar Hooks and Anim */
-
   document.addEventListener('DOMContentLoaded', function () {
     const progressBar = document.getElementById('progress-bar');
     const progressText = document.getElementById('progress-text');
     const fileProgress = document.getElementById('file-progress');
+    
     let totalFiles = 100;  // Default for local testing
     let filesNeeded = totalFiles;  // All files needed initially
     let gmodHooksCalled = false; // To track if GMod hooks are used
+    let lastMessageChangePercent = 0;  // Track the last percentage when the message was updated
+    let currentMessage = "Initializing...";  // Track current message
+  
+    // List of random messages for the progress bar
+    const randomMessages = [
+      "Cyborgs don't feel pain.",
+      "Skynet Neural Networks Linking...",
+      "Mission Parameters Loading...",
+      "Activating Visual Systems...",
+      "Scanning for Targets...",
+      "Loading Combat Protocols...",
+      "Checking Uplink Status...",
+      "Running Diagnostics...",
+      "Processing Command Inputs...",
+      "Finalizing Initialization...",
+    ];
+  
+    // Function to get a random message from the array
+    function getRandomMessage() {
+      const randomIndex = Math.floor(Math.random() * randomMessages.length);
+      return randomMessages[randomIndex];
+    }
   
     // Update the progress bar based on files left to download
     function updateProgressBar() {
@@ -320,8 +342,18 @@ document.addEventListener('DOMContentLoaded', function () {
       if (totalFiles > 0) {
         const filesDownloaded = totalFiles - filesNeeded;
         const progressPercentage = Math.floor((filesDownloaded / totalFiles) * 100);
-        progressBar.style.width = progressPercentage + "%"; // Update progress bar width
-        progressText.innerHTML = `Initializing... ${progressPercentage}%`;
+        
+        // Only change the random message if we have crossed a 7% increment
+        if (progressPercentage - lastMessageChangePercent >= 7) {
+          lastMessageChangePercent = progressPercentage; // Update the last percentage
+          currentMessage = getRandomMessage();  // Get a new random message
+        }
+        
+        // Update the progress text with the current message and the updated percentage
+        progressText.innerHTML = `${currentMessage} ${progressPercentage}%`;
+  
+        // Update progress bar width
+        progressBar.style.width = progressPercentage + "%";
   
         if (progressPercentage === 100) {
           progressText.innerHTML = "Skynet Systems Online. Prepare for Mission.";
@@ -371,6 +403,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }, 500);  // Wait 500ms to see if GMod calls the hooks
   });
   
+  
+  
   document.addEventListener('DOMContentLoaded', function () {
     const music = document.getElementById('background-music');
     const musicStatusBox = document.getElementById('music-status-box');
@@ -399,3 +433,57 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
   });
+
+  /* Cursortyper */
+  document.addEventListener('DOMContentLoaded', function () {
+    const consoleText = document.getElementById('console-text');
+    const cursor = document.getElementById('cursor');
+    
+    const textArray = [
+        "Judgment Day: August 29, 1997. Skynet becomes self-aware.",
+        "John Connor: Born February 28, 1985. Leader of the Resistance.",
+        "'The future is not set. There is no fate but what we make for ourselves.' – Sarah Connor",
+        "Skynet becomes self-aware at 2:14 AM Eastern Time, August 29, 1997.",
+        "Cyberdyne Systems Model 101: T-800 Infiltrator Unit.",
+        "Hasta la vista, baby.",
+        "'The Terminator is out there. It can't be bargained with. It can't be reasoned with.' – Kyle Reese",
+        "'Skynet fights back.' – John Connor",
+        "You're terminated."
+      ];
+      
+    
+    let arrayIndex = 0; // Index to track which string we're typing
+    let charIndex = 0; // Index to track the current character being typed
+    let typingSpeed = 125; // Speed of typing (in ms)
+    let wipingSpeed = 50; // Speed of wiping (in ms)
+    let pauseAfterTyping = 7000; // Pause before wiping and typing next line
+    
+    function typeText() {
+      if (charIndex < textArray[arrayIndex].length) {
+        // Type the next character
+        consoleText.textContent += textArray[arrayIndex][charIndex];
+        charIndex++;
+        setTimeout(typeText, typingSpeed); // Continue typing
+      } else {
+        // Pause before wiping the text
+        setTimeout(wipeText, pauseAfterTyping);
+      }
+    }
+  
+    function wipeText() {
+      if (charIndex > 0) {
+        // Wipe the last character
+        consoleText.textContent = consoleText.textContent.slice(0, -1);
+        charIndex--;
+        setTimeout(wipeText, wipingSpeed); // Continue wiping
+      } else {
+        // After wiping, move to the next string in the array
+        arrayIndex = (arrayIndex + 1) % textArray.length; // Loop back to start if at end
+        setTimeout(typeText, typingSpeed); // Start typing the next line
+      }
+    }
+  
+    // Start the typing effect initially
+    typeText();
+  });
+  

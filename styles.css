@@ -40,7 +40,7 @@
 
   .logo {
     position: relative;
-    width: 200px;
+    width: 225px;
     height: auto;
     overflow: hidden;
   }
@@ -49,7 +49,9 @@
     width: 100%;
     height: auto;
     display: block;
-    animation: techcomVisibility 10s infinite;
+  }
+
+    /*animation: techcomVisibility 10s infinite;
   }
   
   /* Skynet overlay effect */
@@ -64,7 +66,7 @@
     background-size: cover;
     opacity: 0;
     pointer-events: none;
-    animation: skynetVisibility 10s infinite, noiseEffect 1s infinite steps(10);
+    animation: skynetVisibility 10s infinite alternate, noiseEffect 1s infinite steps(15);
   }
   
   @keyframes techcomVisibility {
@@ -213,7 +215,7 @@
     line-height: 16px;
     color: #ffffff;
     text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);  /* Glowing white effect */
-    z-index: 0; /* Lower z-index to push this behind other elements */
+    z-index: -1; /* Lower z-index to push this behind other elements */
     opacity: 0.6; /* Optional: Adjust transparency */
   }
   
@@ -315,43 +317,6 @@
     animation: flicker 2s infinite, glitch 1.5s infinite;  /* Flicker and glitch effects */
   }
   
-  
-  /* Scanline Effect for Terminator HUD */
-  .scanlines {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: repeating-linear-gradient(
-      transparent 0px,
-      transparent 2px,
-      rgba(255, 255, 255, 0.05) 2px,
-      rgba(255, 255, 255, 0.05) 4px
-    );
-    pointer-events: none;  /* Allow clicks to pass through */
-    z-index: 10;  /* Place it above the HUD text */
-    opacity: 0.1;  /* Subtle opacity to not overtake the text */
-  }
-  
-  /* Blinking Cursor Effect */
-  .blinking-cursor {
-    display: inline-block;
-    width: 10px;
-    height: 16px;
-    background-color: #ff5555;  /* Same red as the text */
-    animation: blink 0.8s step-end infinite;
-  }
-  
-  @keyframes blink {
-    0%, 100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0;
-    }
-  }
-  
   #music-status-box {
     position: absolute;
     top: 90%;
@@ -365,5 +330,30 @@
     cursor: pointer;
     text-transform: uppercase;
     box-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+  }
+  
+  /* Styling for the console text and cursor */
+  #console {
+    font-family: 'Courier New', monospace;
+    font-size: 18px;
+    color: #00ff00; /* Classic green terminal color */
+    background-color: #000000; /* Black background */
+    padding: 20px;
+    width: 600px;
+    margin: 50px auto;
+    border: 1px solid #00ff00;
+  }
+  
+  #cursor {
+    font-weight: bold;
+    color: #00ff00;
+    animation: blink 1s infinite;
+  }
+  
+  /* Blinking cursor animation */
+  @keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0; }
+    100% { opacity: 1; }
   }
   
