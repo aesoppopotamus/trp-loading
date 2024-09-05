@@ -412,7 +412,7 @@ document.addEventListener('DOMContentLoaded', function () {
       } else {
         console.log('GMod hooks detected. Actual progress will be used.');
       }
-    }, 500);  // Wait 500ms to see if GMod calls the hooks
+    }, 5000);  // Wait 5000ms to see if GMod calls the hooks
   });
   
   
