@@ -323,9 +323,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const progressText = document.getElementById('progress-text');
     const fileProgress = document.getElementById('file-progress');
     
-    let totalFiles = 0;  // Total files will be set by GMod hook
+    let totalFilesInStatus = 0; // Track total files from status (e.g., "1/56")
     let currentFileNumber = 0;  // Track the current file number being processed
-    let totalFilesInStatus = 0; // Track total files from status (like "1/56")
     let gmodHooksCalled = false; // To track if GMod hooks are used
     let lastMessageChangePercent = 0;  // Track the last percentage when the message was updated
     let currentMessage = "Initializing...";  // Track current message
@@ -349,7 +348,7 @@ document.addEventListener('DOMContentLoaded', function () {
       return randomMessages[randomIndex];
     }
   
-    // Update the progress bar based on files left to download
+    // Update the progress bar based on the status of files
     function updateProgressBar() {
       if (totalFilesInStatus > 0) {
         const progressPercentage = Math.floor((currentFileNumber / totalFilesInStatus) * 100);
@@ -374,13 +373,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       }
     }
-  
-    // GMod Hook: Total files to download (GMod will call this)
-    window.SetFilesTotal = function (total) {
-      console.log(`SetFilesTotal called: Total files to download: ${total}`);  // Debug log
-      totalFiles = total;
-      gmodHooksCalled = true; // Mark that GMod hook is being used
-    };
   
     // GMod Hook: Called when the client's joining status changes
     window.SetStatusChanged = function (status) {
@@ -424,6 +416,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }, 5000);  // Wait 5000ms to see if GMod calls the hooks
   });
+  
   
   
   document.addEventListener('DOMContentLoaded', function () {
