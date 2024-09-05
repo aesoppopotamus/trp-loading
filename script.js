@@ -1,23 +1,23 @@
 document.addEventListener('DOMContentLoaded', function () {
     // Simulate the player's name (this could come from GMod hooks in the real scenario)
-    const playerName = "Survivor";  // Simulated player name
-    
-    // Update the player name in the DOM
-    document.getElementById('playerName').innerText = `Welcome to the Future War, ${playerName}`;
-    
-    // Simulate server status being updated after 2 seconds (could come from GMod)
-    setTimeout(() => {
-      document.getElementById('serverStatus').innerText = "Skynet systems are online. Preparing battlefield resources...";
-    }, 2000);
+   //const playerName = "Survivor";  // Simulated player name
+   //
+   //// Update the player name in the DOM
+   //document.getElementById('playerName').innerText = `Welcome to the Future War, ${playerName}`;
+   //
+   //// Simulate server status being updated after 2 seconds (could come from GMod)
+   //setTimeout(() => {
+   //  document.getElementById('serverStatus').innerText = "Skynet systems are online. Preparing battlefield resources...";
+   //}, 2000);
     
     // In GMod, you'd replace these with GMod hooks like:
-    // window.SetPlayerName = function (name) {
-    //   document.getElementById('playerName').innerText = `Welcome to the Future War, ${name}`;
-    // };
+     window.SetPlayerName = function (name) {
+       document.getElementById('playerName').innerText = `Welcome to the Future War, ${name}`;
+     };
     
-    // window.SetServerStatus = function (status) {
-    //   document.getElementById('serverStatus').innerText = status;
-    // };
+     window.SetServerStatus = function (status) {
+       document.getElementById('serverStatus').innerText = status;
+     };
   });
   
 // Scrolling data text overlays
