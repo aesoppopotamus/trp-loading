@@ -453,22 +453,20 @@ document.addEventListener('DOMContentLoaded', function () {
     
     const textArray = [
         "Judgment Day: August 29, 1997. Skynet becomes self-aware.",
-        "John Connor: Born February 28, 1985. Leader of the Resistance.",
-        "'The future is not set. There is no fate but what we make for ourselves.' – Sarah Connor",
-        "Skynet becomes self-aware at 2:14 AM Eastern Time, August 29, 1997.",
-        "Cyberdyne Systems Model 101: T-800 Infiltrator Unit.",
-        "Hasta la vista, baby.",
-        "'The Terminator is out there. It can't be bargained with. It can't be reasoned with.' – Kyle Reese",
-        "'Skynet fights back.' – John Connor",
-        "You're terminated."
-      ];
+        "'Was talking to my brother over the radio the other day. He said his boys saw a battleship floating in the air. It passed by them on it's way east. The guy's gone nuts, I'm telling ya.'",
+        "'Be careful who you call a friend. I travelled alone, with a chick, for two months trynna make it to New Ibiza... Only to wake up in the dead of night, all my shit gone.' - Keyshawn B",
+        "'Bots took my children and killed my wife. If it were up to me, everyone should join the Resistance.' - John Doe",
+        "'There's a large Skynet presence amassed along the southern Cali border with Tijuana and Mexicali, skirmishes breaking out almost daily at this point with the local militias, seems like the net are attempting to push south past the border into Mexico.' - Medusa",
+        "'You need not repent my brothers and sisters. For you are already saved! We stand against him, and his metal Sinners in each day we live, our flesh is testament to our divinity. He must clad his Sinners in metal to shackle them to this world, but we will free them by the scourging of holy gunpowder!' - A Preacher",
+        "'---ollowing announcements, courtesy of the Washington State National Guard. Avoid Clallam County, Influenza A outbreak, not enough medical stations to treat illness... Emergency food and water distribution centers will be open again Thursday, and will remain open until stock is exhausted. Water rationing, and water-boil advisory still in effect for Clallam County, Jefferson County, Kitsap Coun---'"
+     ];
       
     
     let arrayIndex = 0; // Index to track which string we're typing
     let charIndex = 0; // Index to track the current character being typed
-    let typingSpeed = 125; // Speed of typing (in ms)
+    let typingSpeed = 75; // Speed of typing (in ms)
     let wipingSpeed = 50; // Speed of wiping (in ms)
-    let pauseAfterTyping = 7000; // Pause before wiping and typing next line
+    let pauseAfterTyping = 5000; // Pause before wiping and typing next line
     
     function typeText() {
       if (charIndex < textArray[arrayIndex].length) {
