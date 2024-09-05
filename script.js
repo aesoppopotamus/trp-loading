@@ -324,8 +324,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const fileProgress = document.getElementById('file-progress');
     
     let totalFiles = 0;  // Total files will be set by GMod hook
-    let filesNeeded = 0;  // Files remaining will be set by GMod hook
-    let currentFile = ''; // Track the current file being downloaded
+    let currentFileNumber = 0;  // Track the current file number being processed
+    let totalFilesInStatus = 0; // Track total files from status (like "1/56")
     let gmodHooksCalled = false; // To track if GMod hooks are used
     let lastMessageChangePercent = 0;  // Track the last percentage when the message was updated
     let currentMessage = "Initializing...";  // Track current message
@@ -351,17 +351,15 @@ document.addEventListener('DOMContentLoaded', function () {
   
     // Update the progress bar based on files left to download
     function updateProgressBar() {
-      console.log(`Total files: ${totalFiles}, Files needed: ${filesNeeded}, Current file: ${currentFile}`); // Log progress
-      if (totalFiles > 0 && filesNeeded <= totalFiles) {
-        const filesDownloaded = totalFiles - filesNeeded;
-        const progressPercentage = Math.floor((filesDownloaded / totalFiles) * 100);
+      if (totalFilesInStatus > 0) {
+        const progressPercentage = Math.floor((currentFileNumber / totalFilesInStatus) * 100);
         
         // Only change the random message if we have crossed a 7% increment
         if (progressPercentage - lastMessageChangePercent >= 7) {
           lastMessageChangePercent = progressPercentage; // Update the last percentage
           currentMessage = getRandomMessage();  // Get a new random message
         }
-        
+  
         // Update the progress text with the current message and the updated percentage
         progressText.innerHTML = `${currentMessage} ${progressPercentage}%`;
   
@@ -372,10 +370,8 @@ document.addEventListener('DOMContentLoaded', function () {
           progressText.innerHTML = "Skynet Systems Online. Prepare for Mission.";
           fileProgress.innerHTML = "All files loaded.";
         } else {
-          fileProgress.innerHTML = `${filesNeeded} files remaining. Current file: ${currentFile}`;
+          fileProgress.innerHTML = `Processing file ${currentFileNumber} of ${totalFilesInStatus}`;
         }
-      } else {
-        console.error("Total files is 0 or filesNeeded is greater than totalFiles. Check the GMod hooks.");
       }
     }
   
@@ -383,42 +379,33 @@ document.addEventListener('DOMContentLoaded', function () {
     window.SetFilesTotal = function (total) {
       console.log(`SetFilesTotal called: Total files to download: ${total}`);  // Debug log
       totalFiles = total;
-      filesNeeded = total; // Initially set filesNeeded to totalFiles
       gmodHooksCalled = true; // Mark that GMod hook is being used
-    };
-  
-    // GMod Hook: Files remaining to download (GMod will call this)
-    window.SetFilesNeeded = function (needed) {
-      console.log(`SetFilesNeeded called: Files needed: ${needed}`);  // Debug log
-      filesNeeded = needed;
-      updateProgressBar(); // Only update when files are finished downloading
-    };
-  
-    // GMod Hook: Called when the client starts downloading a file
-    window.DownloadingFile = function (fileName) {
-      console.log(`DownloadingFile called: Now downloading: ${fileName}`); // Debug log
-      currentFile = fileName;
-      updateProgressBar();  // Update the progress bar with the new file
     };
   
     // GMod Hook: Called when the client's joining status changes
     window.SetStatusChanged = function (status) {
       console.log(`SetStatusChanged called: Status changed to: ${status}`); // Debug log
-      if (status === "Retrieving server info") {
-        progressText.innerHTML = "Retrieving server info...";
-      } else if (status === "Starting Lua...") {
-        progressText.innerHTML = "Starting Lua...";
-      } else {
-        progressText.innerHTML = status;
+      
+      // Parse file number and total files from the status, e.g., "1/56 (18.7 GB) - Loading..."
+      const match = status.match(/(\d+)\/(\d+)/);
+      if (match) {
+        currentFileNumber = parseInt(match[1], 10); // Current file number
+        totalFilesInStatus = parseInt(match[2], 10); // Total files
+        updateProgressBar();
       }
+    };
+  
+    // GMod Hook: Called when the client starts downloading a file
+    window.DownloadingFile = function (fileName) {
+      console.log(`DownloadingFile called: Now downloading: ${fileName}`); // Debug log
     };
   
     // Fallback: Simulate loading progress for local testing
     function simulateLocalProgress() {
       console.log('Simulating local progress...'); // Log the fallback simulation
       const localInterval = setInterval(function () {
-        if (filesNeeded > 0) {
-          filesNeeded--;
+        if (currentFileNumber < totalFilesInStatus) {
+          currentFileNumber++;
           updateProgressBar();
         } else {
           clearInterval(localInterval);
@@ -430,16 +417,13 @@ document.addEventListener('DOMContentLoaded', function () {
     setTimeout(function () {
       if (!gmodHooksCalled) {
         console.log('GMod hooks not called. Simulating progress for local testing.');
-        totalFiles = 100; // Simulate 100 files for local testing
-        filesNeeded = totalFiles;
+        totalFilesInStatus = 100; // Simulate 100 files for local testing
         simulateLocalProgress();  // Start local simulation after timeout
       } else {
         console.log('GMod hooks detected. Actual progress will be used.');
       }
-    }, 10000);  // Wait 10000ms to see if GMod calls the hooks
+    }, 5000);  // Wait 5000ms to see if GMod calls the hooks
   });
-  
-  
   
   
   document.addEventListener('DOMContentLoaded', function () {
