@@ -149,7 +149,7 @@
     left: 50%;
     transform: translateX(-50%);
     width: 50%; /* Width of the container */
-    height: 30px; /* Height of the progress bar */
+    height: 50px; /* Height of the progress bar */
     border: 2px solid #ff0000; /* Red border to match Skynet theme */
     box-shadow: 0 0 10px rgba(255, 0, 0, 0.8), inset 0 0 10px rgba(255, 0, 0, 0.6);
     overflow: hidden;
@@ -172,9 +172,13 @@
   
   /* Progress Text */
   #progress-text {
-    color: #ffffff;
-    opacity: 0.8; /* Make text a little transparent */
-  }
+    padding-left: 10px;
+    text-align: center; 
+    width: 100%;  
+    color: #ffffff; 
+    line-height: 10px; 
+    font-size: 10px;
+}
 
   /* File Progress Details */
   #loading-details {

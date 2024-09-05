@@ -355,7 +355,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Function to calculate Lua file progress
     function calculateLuaProgress() {
       if (totalLuaFiles > 0 && luaFilesDownloaded <= totalLuaFiles) {
-        return (luaFilesDownloaded / totalLuaFiles) * 100;
+        return Math.round(luaFilesDownloaded / totalLuaFiles) * 100;
       }
       return 0;
     }
