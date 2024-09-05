@@ -500,7 +500,7 @@ document.addEventListener('DOMContentLoaded', function () {
       } else {
         console.log('GMod hooks detected. Actual progress will be used.');
       }
-    }, 5000);  // Wait 5000ms to see if GMod calls the hooks
+    }, 10000);  // Wait 5000ms to see if GMod calls the hooks
   });
   
   /* MUSIC AUTOPLAY-REMOVE FOR PROD */
