@@ -19,10 +19,17 @@
     <!-- Display Skynet Status -->
     <p id="serverStatus" class="glitch-text">Connecting to Skynet Core...</p>
 
-    <!-- Progress Bar -->
-    <div class="progress-bar">
-      <div class="progress"></div>
+  <!-- Skynet Themed Progress Bar -->
+  <div id="progress-container">
+    <div id="progress-bar">
+      <span id="progress-text">Initializing Skynet Systems...</span>
     </div>
+  </div>
+
+  <div id="loading-details">
+    <!-- Display file download progress or other loading information here -->
+    <p id="file-progress">Preparing Skynet Uplink...</p>
+  </div>
 
     <!-- Audio (Optional Terminator Theme) -->
     <audio controls autoplay loop>
@@ -30,43 +37,16 @@
       Your browser does not support the audio element.
     </audio>
 
-    <div class="hud-feed-top-left">
-        <div class="feed-container">
-          <div class="feed-line">INITIALIZING SYSTEM...</div>
-          <div class="feed-line">SCANNING ENVIRONMENT...</div>
-          <div class="feed-line">TARGET LOCATED...</div>
-          <div class="feed-line">ANALYZING DATA...</div>
-          <div class="feed-line">CONNECTION ESTABLISHED...</div>
-          <div class="feed-line">MISSION PRIORITY: TERMINATE</div>
-      
-          <!-- Duplicate feed lines for seamless looping -->
-          <div class="feed-line">INITIALIZING SYSTEM...</div>
-          <div class="feed-line">SCANNING ENVIRONMENT...</div>
-          <div class="feed-line">TARGET LOCATED...</div>
-          <div class="feed-line">ANALYZING DATA...</div>
-          <div class="feed-line">CONNECTION ESTABLISHED...</div>
-          <div class="feed-line">MISSION PRIORITY: TERMINATE</div>
-        </div>
-      </div>
-      
-      <div class="hud-feed-top-right">
-        <div class="feed-container">
-          <div class="feed-line">VISUAL ACQUIRED...</div>
-          <div class="feed-line">THERMAL SCAN: ACTIVE</div>
-          <div class="feed-line">ENERGY LEVELS: STABLE</div>
-          <div class="feed-line">SYSTEM CHECK COMPLETE</div>
-          <div class="feed-line">INITIATE TARGET PROTOCOL</div>
-      
-          <!-- Duplicate feed lines for seamless looping -->
-          <div class="feed-line">VISUAL ACQUIRED...</div>
-          <div class="feed-line">THERMAL SCAN: ACTIVE</div>
-          <div class="feed-line">ENERGY LEVELS: STABLE</div>
-          <div class="feed-line">SYSTEM CHECK COMPLETE</div>
-          <div class="feed-line">INITIATE TARGET PROTOCOL</div>
-        </div>
-      </div>
-      
-      
+    <!-- Assembly Code Left Column -->
+    <div class="assembly-feed-left" id="assembly-feed-left">
+      <!-- Dynamically generated assembly lines will be added here -->
+    </div>
+
+    <!-- Assembly Code Right Column -->
+    <div class="assembly-feed-right" id="assembly-feed-right">
+      <!-- Dynamically generated assembly lines will be added here -->
+    </div>
+
       <!-- Blinking cursor for dramatic effect -->
       <div class="blinking-cursor"></div>
 

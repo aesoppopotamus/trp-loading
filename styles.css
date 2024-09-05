@@ -32,7 +32,7 @@
   }
   
   /* Apply the Terminator font to specific elements */
-  .hud-feed-top-left, .hud-feed-top-right, .logo {
+  .scan-text {
     font-family: 'TerminatorReal', sans-serif;  /* Fallback to sans-serif in case font doesn't load */
     color: #ff5555;  /* Terminator red */
     text-shadow: 0 0 5px rgba(255, 85, 85, 0.8);  /* Optional glowing red shadow */
@@ -176,6 +176,7 @@
   /* Glitch Effect for Server Status */
   .glitch-text {
     font-size: 1.2rem;
+    font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     margin-bottom: 20px;
     color: #3498db;  /* Skynet blue */
     text-shadow: 0 0 5px #3498db;
@@ -203,28 +204,38 @@
   }
   
   
-  /* Progress Bar */
-  .progress-bar {
-    width: 80%;
-    height: 30px;
-    background-color: #34495e;  /* Darker background */
-    margin: 20px auto;
-    border-radius: 5px;
+/* Progress Bar Container */
+#progress-container {
+    position: absolute;
+    bottom: 50px; /* Position it near the bottom of the screen */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%; /* Width of the container */
+    height: 30px; /* Height of the progress bar */
+    border: 2px solid #ff0000; /* Red border to match Skynet theme */
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.8), inset 0 0 10px rgba(255, 0, 0, 0.6);
     overflow: hidden;
+    background-color: #1a1a1a; /* Dark background behind the bar */
   }
   
-  .progress {
-    width: 0;
+  /* Progress Bar Itself */
+  #progress-bar {
+    width: 0; /* Start at 0 and gradually fill */
     height: 100%;
-    background-color: #27ae60;  /* Skynet green */
-    border-radius: 5px;
-    animation: loadProgress 5s forwards;
+    background-color: #ff0000; /* Skynet red */
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.8); /* Glowing red effect */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.8); /* Glowing text effect */
+    color: #ffffff;
   }
   
-  /* Keyframes for Progress Bar */
-  @keyframes loadProgress {
-    0% { width: 0%; }
-    100% { width: 100%; }
+  /* Progress Text */
+  #progress-text {
+    color: #ffffff;
+    opacity: 0.8; /* Make text a little transparent */
   }
   
   /* Glitch Text Animation */
@@ -235,50 +246,155 @@
   }
 
 
-/* Terminator HUD Feed - Red Text in Top Corners */
-.hud-feed-top-left, .hud-feed-top-right {
+/* Assembly Code Feed Left Column */
+.assembly-feed-left {
     position: absolute;
     top: 10px;
-    width: 150px;  /* Fixed width to allow wrapping */
-    height: 200%;  /* Full height for scrolling effect */
-    font-family: 'TerminatorReal', monospace;
+    left: 10px;
+    font-family: 'Courier New', monospace;
     font-size: 14px;
     line-height: 16px;
-    color: #ff5555;  /* Terminator red */
-    text-shadow: 0 0 5px rgba(255, 85, 85, 0.8);  /* Optional glowing effect */
-    overflow: hidden;  /* Prevent overflowing text */
+    color: #ffffff;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);  /* Glowing white effect */
+    z-index: 0; /* Lower to push behind elements */
+    opacity: 0.6;
   }
   
-  .hud-feed-top-left {
-    left: 10px;
-  }
-  
-  .hud-feed-top-right {
-    right: 10px;
-  }
-  
-  /* Feed Container for Continuous Scrolling */
-  .feed-container {
+  .assembly-line-left {
     display: flex;
-    flex-direction: column;
-    animation: textScroll 30s linear infinite;  /* Continuous scrolling */
+    justify-content: space-between;
+    white-space: nowrap;
+    overflow: hidden;
   }
   
-  /* Individual lines for the feed */
-  .feed-line {
-    padding-bottom: 5px;  /* Add space between lines for readability */
+  /* Assembly Code Feed Right Column */
+  .assembly-feed-right {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 16px;
+    color: #ffffff;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);  /* Glowing white effect */
+    z-index: 0; /* Lower z-index to push this behind other elements */
+    opacity: 0.6; /* Optional: Adjust transparency */
   }
   
-  /* Text Scroll Animation */
-  @keyframes textScroll {
+  .assembly-line-right {
+    display: flex;
+    justify-content: space-between;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  
+  /* Targeting Reticle in the Center */
+  .reticle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 60px;
+    height: 60px;
+    transform: translate(-50%, -50%);
+  }
+  
+  .reticle-vertical, .reticle-horizontal {
+    position: absolute;
+    background-color: #ff5555;
+    z-index: 10;
+  }
+  
+  .reticle-vertical {
+    width: 2px;
+    height: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .reticle-horizontal {
+    width: 60px;
+    height: 2px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  /* Scanline Effect */
+  .scanlines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+      transparent 0px,
+      transparent 3px,
+      rgba(255, 255, 255, 0.1) 4px
+    );
+    z-index: 5;
+    pointer-events: none;
+    opacity: 0.1;
+  }
+  
+  /* Flickering and Glitching Effects */
+  @keyframes flicker {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+  
+  @keyframes glitch {
     0% {
-      transform: translateY(300%);  /* Start below the view */
+      text-shadow: 0 0 10px rgba(255, 85, 85, 0.8), 0 0 20px rgba(255, 85, 85, 0.8);
+    }
+    50% {
+      text-shadow: 0 0 20px rgba(255, 85, 85, 1), 0 0 40px rgba(255, 85, 85, 1);
     }
     100% {
-      transform: translateY(-100%);  /* Scroll to above the view */
+      text-shadow: 0 0 10px rgba(255, 85, 85, 0.8), 0 0 20px rgba(255, 85, 85, 0.8);
     }
   }
   
+  .hud-feed, .assembly-feed {
+    animation: flicker 2s infinite, glitch 1.5s infinite;
+  }
+  
+  /* Scanline Effect */
+  .scanlines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+      transparent 0px,
+      transparent 3px,
+      rgba(255, 255, 255, 0.1) 4px
+    );
+    z-index: 5;
+    pointer-events: none;  /* Allow interactions underneath */
+    opacity: 0.1;  /* Subtle scanline effect */
+  }
+  
+  /* Glitching and Flickering Effects */
+  @keyframes flicker {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+  
+  @keyframes glitch {
+    0% {
+      text-shadow: 0 0 10px rgba(255, 85, 85, 0.8), 0 0 20px rgba(255, 85, 85, 0.8);
+    }
+    50% {
+      text-shadow: 0 0 20px rgba(255, 85, 85, 1), 0 0 40px rgba(255, 85, 85, 1);
+    }
+    100% {
+      text-shadow: 0 0 10px rgba(255, 85, 85, 0.8), 0 0 20px rgba(255, 85, 85, 0.8);
+    }
+  }
+  
+  .hud-feed, .assembly-feed {
+    animation: flicker 2s infinite, glitch 1.5s infinite;  /* Flicker and glitch effects */
+  }
   
   
   /* Scanline Effect for Terminator HUD */
