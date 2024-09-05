@@ -325,6 +325,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
     let totalFiles = 0;  // Total files will be set by GMod hook
     let filesNeeded = 0;  // Files remaining will be set by GMod hook
+    let previousFilesNeeded = 0;  // To track changes in files needed
     let gmodHooksCalled = false; // To track if GMod hooks are used
     let lastMessageChangePercent = 0;  // Track the last percentage when the message was updated
     let currentMessage = "Initializing...";  // Track current message
@@ -389,9 +390,27 @@ document.addEventListener('DOMContentLoaded', function () {
     window.SetFilesNeeded = function (needed) {
       console.log(`SetFilesNeeded called: Files needed: ${needed}`);  // Debug log
       filesNeeded = needed;
+      previousFilesNeeded = needed;  // Initialize previousFilesNeeded
       updateProgressBar(); // Only update when files are finished downloading
       gmodHooksCalled = true; // Mark that GMod hook is being used
     };
+  
+    // Polling function to check for updates in files needed
+    function pollForProgress() {
+      if (gmodHooksCalled && filesNeeded > 0) {
+        // Simulate file downloading by reducing the filesNeeded count over time
+        if (filesNeeded !== previousFilesNeeded) {
+          console.log('Files needed changed, updating progress...');
+          previousFilesNeeded = filesNeeded;  // Update previous filesNeeded
+          updateProgressBar();
+        } else {
+          console.log('Files needed has not changed.');
+        }
+      }
+    }
+  
+    // Set an interval to poll for progress updates
+    setInterval(pollForProgress, 1000); // Poll every 1 second
   
     // Fallback: Simulate loading progress for local testing
     function simulateLocalProgress() {
