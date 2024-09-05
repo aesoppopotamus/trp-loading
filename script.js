@@ -332,6 +332,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let gmodHooksCalled = false;  // To track if GMod hooks are used
     let lastMessageChangePercent = 0;  // Track the last percentage when the message was updated
     let currentMessage = "Initializing...";  // Track current message
+    let localInterval;  // Track local simulation interval
   
     // List of random messages for the progress bar
     const randomMessages = [
@@ -355,7 +356,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Function to calculate Lua file progress
     function calculateLuaProgress() {
       if (totalLuaFiles > 0 && luaFilesDownloaded <= totalLuaFiles) {
-        return Math.round(luaFilesDownloaded / totalLuaFiles) * 100;
+        return Math.round((luaFilesDownloaded / totalLuaFiles) * 100);  // Rounded percentage
       }
       return 0;
     }
@@ -364,7 +365,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function calculateGeneralProgress() {
       if (totalFiles > 0 && filesNeeded <= totalFiles) {
         const filesDownloaded = totalFiles - filesNeeded;
-        return (filesDownloaded / totalFiles) * 100;
+        return Math.round((filesDownloaded / totalFiles) * 100);  // Rounded percentage
       }
       return 0;
     }
@@ -407,13 +408,34 @@ document.addEventListener('DOMContentLoaded', function () {
     window.SetFilesTotal = function (total) {
       console.log(`SetFilesTotal called: Total files to download: ${total}`);  // Debug log
       totalFiles = total;
+  
+      // If no files are needed, set progress to 100% immediately
+      if (totalFiles === 0) {
+        progressBar.style.width = "100%";
+        progressText.innerHTML = "Skynet Systems Online. No downloads required.";
+        fileProgress.innerHTML = "All files loaded.";
+        return;
+      }
+  
       gmodHooksCalled = true;  // Mark that GMod hook is being used
+      if (localInterval) {
+        clearInterval(localInterval);  // Stop local simulation if GMod hooks are in use
+      }
     };
   
     // GMod Hook: Files remaining to download (workshop/general files)
     window.SetFilesNeeded = function (needed) {
       console.log(`SetFilesNeeded called: Files needed: ${needed}`);  // Debug log
       filesNeeded = needed;
+  
+      // If no files are needed, set progress to 100% immediately
+      if (filesNeeded === 0) {
+        progressBar.style.width = "100%";
+        progressText.innerHTML = "Skynet Systems Online. No downloads required.";
+        fileProgress.innerHTML = "All files loaded.";
+        return;
+      }
+  
       updateProgressBar();  // Update the progress based on remaining files
     };
   
@@ -458,7 +480,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Fallback: Simulate loading progress for local testing
     function simulateLocalProgress() {
       console.log('Simulating local progress...');  // Log the fallback simulation
-      const localInterval = setInterval(function () {
+      localInterval = setInterval(function () {
         if (filesNeeded > 0) {
           filesNeeded--;
           updateProgressBar();
@@ -478,9 +500,8 @@ document.addEventListener('DOMContentLoaded', function () {
       } else {
         console.log('GMod hooks detected. Actual progress will be used.');
       }
-    }, 8000);  // Wait 8000ms to see if GMod calls the hooks
+    }, 5000);  // Wait 5000ms to see if GMod calls the hooks
   });
-  
   
   /* MUSIC AUTOPLAY-REMOVE FOR PROD */
   document.addEventListener('DOMContentLoaded', function () {
