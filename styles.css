@@ -51,7 +51,7 @@
     display: block;
   }
 
-    /*animation: techcomVisibility 10s infinite;
+    /** animation: techcomVisibility 10s infinite;
   }
   
   /* Skynet overlay effect */
@@ -121,24 +121,34 @@
     background-image: url('assets/background.jpg');
     background-size: cover;
     background-position: center;
-    animation: panZoomEffect 20s infinite ease-in-out;
-    opacity: 0.6;
+    animation: panZoomEffect 30s ease-in-out infinite alternate;
+    opacity: 0.4;
   }
   
-  /* Keyframe animation for panning and zooming */
-  @keyframes panZoomEffect {
-    0% { background-position: left center; transform: scale(1); }
-    100% { background-position: right center; transform: scale(1.3); }
-  }
+/* Keyframes for Pan and Zoom Animation */
+@keyframes panZoomEffect {
+    0% {
+      background-position: 0% 50%; /* Start at the left */
+      background-size: 120%; /* Initial zoom level */
+    }
+    50% {
+      background-position: 100% 50%; /* Pan to the right */
+      background-size: 125%; /* Zoom in slightly */
+    }
+    100% {
+      background-position: 0% 50%; /* Pan back to the left */
+      background-size: 120%; /* Zoom out slightly */
+    }
+}
   
   
 /* Progress Bar Container */
-#progress-container {
+  #progress-container {
     position: absolute;
     bottom: 50px; /* Position it near the bottom of the screen */
     left: 50%;
     transform: translateX(-50%);
-    width: 80%; /* Width of the container */
+    width: 50%; /* Width of the container */
     height: 30px; /* Height of the progress bar */
     border: 2px solid #ff0000; /* Red border to match Skynet theme */
     box-shadow: 0 0 10px rgba(255, 0, 0, 0.8), inset 0 0 10px rgba(255, 0, 0, 0.6);
@@ -167,7 +177,7 @@
   }
 
   /* File Progress Details */
-#loading-details {
+  #loading-details {
     position: absolute;
     bottom: 20px; /* Just below the progress bar */
     left: 50%;
@@ -185,7 +195,7 @@
 
 
 /* Assembly Code Feed Left Column */
-.assembly-feed-left {
+  .assembly-feed-left {
     position: absolute;
     top: 10px;
     left: 10px;

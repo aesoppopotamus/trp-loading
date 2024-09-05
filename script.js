@@ -318,7 +318,6 @@ document.addEventListener('DOMContentLoaded', function () {
   
     // List of random messages for the progress bar
     const randomMessages = [
-      "Cyborgs don't feel pain.",
       "Skynet Neural Networks Linking...",
       "Mission Parameters Loading...",
       "Activating Visual Systems...",
