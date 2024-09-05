@@ -1,0 +1,319 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'TerminatorFont', Arial, sans-serif;
+    background-color: #1b1b1b;  /* Dark background */
+    color: #fff;  /* White text */
+    text-align: center;
+    overflow: hidden;
+  }
+  
+  /* Loading Wrapper */
+  #loading-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    position: relative;
+  }
+  
+/* Import the Terminator Real NFI font */
+@font-face {
+    font-family: 'TerminatorReal';
+    src: url('fonts/TerminatorRealNFI.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+  /* Apply the Terminator font to specific elements */
+  .hud-feed-top-left, .hud-feed-top-right, .logo {
+    font-family: 'TerminatorReal', sans-serif;  /* Fallback to sans-serif in case font doesn't load */
+    color: #ff5555;  /* Terminator red */
+    text-shadow: 0 0 5px rgba(255, 85, 85, 0.8);  /* Optional glowing red shadow */
+  }  
+
+/* Extreme Glitch Animation for the Logo */
+.logo {
+    position: relative;
+  }
+  
+  .logo img {
+    width: 200px;
+    height: auto;
+    margin-bottom: 20px;
+    animation: extremeGlitchEffect 6s infinite;  /* Long timeline for a varied glitch */
+  }
+  
+  /* Keyframe animation for extreme glitching */
+  @keyframes extremeGlitchEffect {
+    0%, 100% {
+      opacity: 1;
+      transform: none;
+      filter: none;
+    }
+  
+    /* Quick bursts of distortion */
+    5%, 55% {
+      opacity: 0.5;
+      transform: translateX(5px) translateY(-2px) rotate(2deg) skewX(2deg);
+      filter: hue-rotate(90deg) contrast(2) blur(1px);
+    }
+  
+    10%, 60% {
+      opacity: 0.8;
+      transform: translateX(-5px) translateY(2px) rotate(-2deg) skewY(2deg);
+      filter: hue-rotate(-90deg) contrast(1.5) blur(2px);
+    }
+  
+    20%, 70% {
+      opacity: 0.4;
+      transform: translateX(3px) translateY(-3px) skewX(3deg);
+      filter: saturate(2) brightness(1.2);
+    }
+  
+    30%, 80% {
+      opacity: 0.7;
+      transform: translateX(-3px) translateY(3px) rotate(-3deg);
+      filter: invert(1) brightness(0.8) contrast(3);
+    }
+  
+    40%, 90% {
+      opacity: 0.9;
+      transform: translateX(1px) translateY(-1px) skewX(1deg);
+      filter: hue-rotate(120deg) blur(1px);
+    }
+  }
+  
+  /* First ghost layer: rapid flickering */
+  .logo::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('assets/logo.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0;
+    animation: flickerGhost 6s infinite;  /* Longer animation for randomness */
+  }
+  
+  @keyframes flickerGhost {
+    0%, 100% {
+      opacity: 0;
+      transform: translateX(0);
+    }
+  
+    7%, 30%, 60% {
+      opacity: 0.2;
+      transform: translateX(-7px) translateY(3px);
+      filter: hue-rotate(180deg);
+    }
+  
+    15%, 45%, 75% {
+      opacity: 0.1;
+      transform: translateX(5px) translateY(-5px);
+      filter: saturate(1.5);
+    }
+  }
+  
+  /* Second ghost layer: more dramatic shifts */
+  .logo::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('assets/logo.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0;
+    animation: dramaticGhost 5s infinite;
+  }
+  
+  @keyframes dramaticGhost {
+    0%, 100% {
+      opacity: 0;
+      transform: translateX(0) translateY(0);
+    }
+  
+    25% {
+      opacity: 0.3;
+      transform: translateX(-10px) translateY(10px) skewX(5deg);
+      filter: brightness(1.5) contrast(1.5);
+    }
+  
+    50% {
+      opacity: 0.4;
+      transform: translateX(10px) translateY(-10px) rotate(3deg);
+      filter: invert(0.7) hue-rotate(90deg);
+    }
+  
+    75% {
+      opacity: 0.2;
+      transform: translateX(-5px) translateY(5px) skewY(3deg);
+      filter: blur(2px) brightness(1.3);
+    }
+  }
+  
+
+  /* Player Greeting */
+  h2.scan-text {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #e74c3c;  /* Terminator red */
+    text-shadow: 0 0 5px #ff0000;
+  }
+  
+  /* Glitch Effect for Server Status */
+  .glitch-text {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    color: #3498db;  /* Skynet blue */
+    text-shadow: 0 0 5px #3498db;
+    animation: glitchEffect 1.5s infinite;
+  }
+
+    /* Background with Pan and Zoom Animation */
+  .background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('assets/background.jpg');
+    background-size: cover;
+    background-position: center;
+    animation: panZoomEffect 20s infinite ease-in-out;
+    opacity: 0.6;
+  }
+  
+  /* Keyframe animation for panning and zooming */
+  @keyframes panZoomEffect {
+    0% { background-position: left center; transform: scale(1); }
+    100% { background-position: right center; transform: scale(1.3); }
+  }
+  
+  
+  /* Progress Bar */
+  .progress-bar {
+    width: 80%;
+    height: 30px;
+    background-color: #34495e;  /* Darker background */
+    margin: 20px auto;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  
+  .progress {
+    width: 0;
+    height: 100%;
+    background-color: #27ae60;  /* Skynet green */
+    border-radius: 5px;
+    animation: loadProgress 5s forwards;
+  }
+  
+  /* Keyframes for Progress Bar */
+  @keyframes loadProgress {
+    0% { width: 0%; }
+    100% { width: 100%; }
+  }
+  
+  /* Glitch Text Animation */
+  @keyframes glitchEffect {
+    0% { text-shadow: 2px 2px #f00, -2px -2px #0f0; }
+    50% { text-shadow: -2px 2px #0f0, 2px -2px #f00; }
+    100% { text-shadow: 2px 2px #0f0, -2px -2px #f00; }
+  }
+
+
+/* Terminator HUD Feed - Red Text in Top Corners */
+.hud-feed-top-left, .hud-feed-top-right {
+    position: absolute;
+    top: 10px;
+    width: 150px;  /* Fixed width to allow wrapping */
+    height: 200%;  /* Full height for scrolling effect */
+    font-family: 'TerminatorReal', monospace;
+    font-size: 14px;
+    line-height: 16px;
+    color: #ff5555;  /* Terminator red */
+    text-shadow: 0 0 5px rgba(255, 85, 85, 0.8);  /* Optional glowing effect */
+    overflow: hidden;  /* Prevent overflowing text */
+  }
+  
+  .hud-feed-top-left {
+    left: 10px;
+  }
+  
+  .hud-feed-top-right {
+    right: 10px;
+  }
+  
+  /* Feed Container for Continuous Scrolling */
+  .feed-container {
+    display: flex;
+    flex-direction: column;
+    animation: textScroll 30s linear infinite;  /* Continuous scrolling */
+  }
+  
+  /* Individual lines for the feed */
+  .feed-line {
+    padding-bottom: 5px;  /* Add space between lines for readability */
+  }
+  
+  /* Text Scroll Animation */
+  @keyframes textScroll {
+    0% {
+      transform: translateY(300%);  /* Start below the view */
+    }
+    100% {
+      transform: translateY(-100%);  /* Scroll to above the view */
+    }
+  }
+  
+  
+  
+  /* Scanline Effect for Terminator HUD */
+  .scanlines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+      transparent 0px,
+      transparent 2px,
+      rgba(255, 255, 255, 0.05) 2px,
+      rgba(255, 255, 255, 0.05) 4px
+    );
+    pointer-events: none;  /* Allow clicks to pass through */
+    z-index: 10;  /* Place it above the HUD text */
+    opacity: 0.1;  /* Subtle opacity to not overtake the text */
+  }
+  
+  /* Blinking Cursor Effect */
+  .blinking-cursor {
+    display: inline-block;
+    width: 10px;
+    height: 16px;
+    background-color: #ff5555;  /* Same red as the text */
+    animation: blink 0.8s step-end infinite;
+  }
+  
+  @keyframes blink {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
+  
