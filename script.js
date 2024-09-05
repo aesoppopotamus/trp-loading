@@ -317,14 +317,14 @@ document.addEventListener('DOMContentLoaded', function () {
     addRightAssemblyLine();
   });
 
-  /* Progress Bar Hooks and Anim */
-  document.addEventListener('DOMContentLoaded', function () {
+/* Progress Bar Hooks and Anim */
+document.addEventListener('DOMContentLoaded', function () {
     const progressBar = document.getElementById('progress-bar');
     const progressText = document.getElementById('progress-text');
     const fileProgress = document.getElementById('file-progress');
     
-    let totalFiles = 100;  // Default for local testing
-    let filesNeeded = totalFiles;  // All files needed initially
+    let totalFiles = 0;  // Total files will be set by GMod hook
+    let filesNeeded = 0;  // Files remaining will be set by GMod hook
     let gmodHooksCalled = false; // To track if GMod hooks are used
     let lastMessageChangePercent = 0;  // Track the last percentage when the message was updated
     let currentMessage = "Initializing...";  // Track current message
@@ -387,7 +387,7 @@ document.addEventListener('DOMContentLoaded', function () {
     window.SetFilesNeeded = function (needed) {
       console.log('SetFilesNeeded called:', needed);  // Debug log
       filesNeeded = needed;
-      updateProgressBar();
+      updateProgressBar(); // Only update when files are finished downloading
       gmodHooksCalled = true; // Mark that GMod hook is being used
     };
   
@@ -408,13 +408,14 @@ document.addEventListener('DOMContentLoaded', function () {
     setTimeout(function () {
       if (!gmodHooksCalled) {
         console.log('GMod hooks not called. Simulating progress for local testing.');
+        totalFiles = 100; // Simulate 100 files for local testing
+        filesNeeded = totalFiles;
         simulateLocalProgress();  // Start local simulation after timeout
       } else {
         console.log('GMod hooks detected. Actual progress will be used.');
       }
     }, 5000);  // Wait 5000ms to see if GMod calls the hooks
-  });
-  
+  });  
   
   
   document.addEventListener('DOMContentLoaded', function () {
