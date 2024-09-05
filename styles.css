@@ -128,15 +128,15 @@
 /* Keyframes for Pan and Zoom Animation */
 @keyframes panZoomEffect {
     0% {
-      background-position: 0% 50%; /* Start at the left */
+      background-position: 0% 50%; transform: scale(1); /* Start at the left */
       background-size: 120%; /* Initial zoom level */
     }
     50% {
-      background-position: 100% 50%; /* Pan to the right */
+      background-position: 100% 50%; transform: scale(1.3); /* Pan to the right */
       background-size: 125%; /* Zoom in slightly */
     }
     100% {
-      background-position: 0% 50%; /* Pan back to the left */
+      background-position: 0% 50%; transform: scale(1); /* Pan back to the left */
       background-size: 120%; /* Zoom out slightly */
     }
 }
