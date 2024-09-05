@@ -465,7 +465,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let arrayIndex = 0; // Index to track which string we're typing
     let charIndex = 0; // Index to track the current character being typed
     let typingSpeed = 75; // Speed of typing (in ms)
-    let wipingSpeed = 50; // Speed of wiping (in ms)
+    let wipingSpeed = 15; // Speed of wiping (in ms)
     let pauseAfterTyping = 5000; // Pause before wiping and typing next line
     
     function typeText() {
