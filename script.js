@@ -325,7 +325,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
     let totalFiles = 0;  // Total files will be set by GMod hook
     let filesNeeded = 0;  // Files remaining will be set by GMod hook
-    let previousFilesNeeded = 0;  // To track changes in files needed
+    let currentFile = ''; // Track the current file being downloaded
     let gmodHooksCalled = false; // To track if GMod hooks are used
     let lastMessageChangePercent = 0;  // Track the last percentage when the message was updated
     let currentMessage = "Initializing...";  // Track current message
@@ -351,7 +351,7 @@ document.addEventListener('DOMContentLoaded', function () {
   
     // Update the progress bar based on files left to download
     function updateProgressBar() {
-      console.log(`Total files: ${totalFiles}, Files needed: ${filesNeeded}`); // Log progress
+      console.log(`Total files: ${totalFiles}, Files needed: ${filesNeeded}, Current file: ${currentFile}`); // Log progress
       if (totalFiles > 0 && filesNeeded <= totalFiles) {
         const filesDownloaded = totalFiles - filesNeeded;
         const progressPercentage = Math.floor((filesDownloaded / totalFiles) * 100);
@@ -372,7 +372,7 @@ document.addEventListener('DOMContentLoaded', function () {
           progressText.innerHTML = "Skynet Systems Online. Prepare for Mission.";
           fileProgress.innerHTML = "All files loaded.";
         } else {
-          fileProgress.innerHTML = `${filesNeeded} files remaining...`;
+          fileProgress.innerHTML = `${filesNeeded} files remaining. Current file: ${currentFile}`;
         }
       } else {
         console.error("Total files is 0 or filesNeeded is greater than totalFiles. Check the GMod hooks.");
@@ -383,6 +383,7 @@ document.addEventListener('DOMContentLoaded', function () {
     window.SetFilesTotal = function (total) {
       console.log(`SetFilesTotal called: Total files to download: ${total}`);  // Debug log
       totalFiles = total;
+      filesNeeded = total; // Initially set filesNeeded to totalFiles
       gmodHooksCalled = true; // Mark that GMod hook is being used
     };
   
@@ -390,27 +391,27 @@ document.addEventListener('DOMContentLoaded', function () {
     window.SetFilesNeeded = function (needed) {
       console.log(`SetFilesNeeded called: Files needed: ${needed}`);  // Debug log
       filesNeeded = needed;
-      previousFilesNeeded = needed;  // Initialize previousFilesNeeded
       updateProgressBar(); // Only update when files are finished downloading
-      gmodHooksCalled = true; // Mark that GMod hook is being used
     };
   
-    // Polling function to check for updates in files needed
-    function pollForProgress() {
-      if (gmodHooksCalled && filesNeeded > 0) {
-        // Simulate file downloading by reducing the filesNeeded count over time
-        if (filesNeeded !== previousFilesNeeded) {
-          console.log('Files needed changed, updating progress...');
-          previousFilesNeeded = filesNeeded;  // Update previous filesNeeded
-          updateProgressBar();
-        } else {
-          console.log('Files needed has not changed.');
-        }
-      }
-    }
+    // GMod Hook: Called when the client starts downloading a file
+    window.DownloadingFile = function (fileName) {
+      console.log(`DownloadingFile called: Now downloading: ${fileName}`); // Debug log
+      currentFile = fileName;
+      updateProgressBar();  // Update the progress bar with the new file
+    };
   
-    // Set an interval to poll for progress updates
-    setInterval(pollForProgress, 1000); // Poll every 1 second
+    // GMod Hook: Called when the client's joining status changes
+    window.SetStatusChanged = function (status) {
+      console.log(`SetStatusChanged called: Status changed to: ${status}`); // Debug log
+      if (status === "Retrieving server info") {
+        progressText.innerHTML = "Retrieving server info...";
+      } else if (status === "Starting Lua...") {
+        progressText.innerHTML = "Starting Lua...";
+      } else {
+        progressText.innerHTML = status;
+      }
+    };
   
     // Fallback: Simulate loading progress for local testing
     function simulateLocalProgress() {
@@ -437,6 +438,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }, 10000);  // Wait 10000ms to see if GMod calls the hooks
   });
+  
   
   
   
