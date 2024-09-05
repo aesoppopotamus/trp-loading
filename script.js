@@ -351,7 +351,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Update the progress bar based on files left to download
     function updateProgressBar() {
       console.log(`Total files: ${totalFiles}, Files needed: ${filesNeeded}`); // Log progress
-      if (totalFiles > 0) {
+      if (totalFiles > 0 && filesNeeded <= totalFiles) {
         const filesDownloaded = totalFiles - filesNeeded;
         const progressPercentage = Math.floor((filesDownloaded / totalFiles) * 100);
         
@@ -371,21 +371,23 @@ document.addEventListener('DOMContentLoaded', function () {
           progressText.innerHTML = "Skynet Systems Online. Prepare for Mission.";
           fileProgress.innerHTML = "All files loaded.";
         } else {
-          fileProgress.innerHTML = `${filesNeeded} files remaining.`;
+          fileProgress.innerHTML = `${filesNeeded} files remaining...`;
         }
+      } else {
+        console.error("Total files is 0 or filesNeeded is greater than totalFiles. Check the GMod hooks.");
       }
     }
   
     // GMod Hook: Total files to download (GMod will call this)
     window.SetFilesTotal = function (total) {
-      console.log('SetFilesTotal called:', total);  // Debug log
+      console.log(`SetFilesTotal called: Total files to download: ${total}`);  // Debug log
       totalFiles = total;
       gmodHooksCalled = true; // Mark that GMod hook is being used
     };
   
     // GMod Hook: Files remaining to download (GMod will call this)
     window.SetFilesNeeded = function (needed) {
-      console.log('SetFilesNeeded called:', needed);  // Debug log
+      console.log(`SetFilesNeeded called: Files needed: ${needed}`);  // Debug log
       filesNeeded = needed;
       updateProgressBar(); // Only update when files are finished downloading
       gmodHooksCalled = true; // Mark that GMod hook is being used
@@ -414,8 +416,9 @@ document.addEventListener('DOMContentLoaded', function () {
       } else {
         console.log('GMod hooks detected. Actual progress will be used.');
       }
-    }, 10000);  // Wait 10000ms to see if GMod calls the hooks
-  });  
+    }, 5000);  // Wait 5000ms to see if GMod calls the hooks
+  });
+  
   
   
   document.addEventListener('DOMContentLoaded', function () {
